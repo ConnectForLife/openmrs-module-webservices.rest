@@ -68,13 +68,13 @@ public class SessionController1_9Test extends BaseModuleWebContextSensitiveTest 
 	}
 	
 	/**
-	 * @see SessionController1_9#get()
+	 * @see SessionController1_9#get(HttpServletRequest)
 	 * @verifies return the session id if the user is authenticated
 	 */
 	@Test
 	public void get_shouldReturnTheUserIfTheUserIsAuthenticated() throws Exception {
 		Assert.assertTrue(Context.isAuthenticated());
-		Object ret = controller.get();
+		Object ret = controller.get(hsr);
 		Object userProp = PropertyUtils.getProperty(ret, "user");
 		List<HashMap<String, String>> userRoles = (List<HashMap<String, String>>) PropertyUtils.getProperty(userProp,
 		    "roles");
@@ -89,7 +89,7 @@ public class SessionController1_9Test extends BaseModuleWebContextSensitiveTest 
 	@Test
 	public void get_shouldReturnLocaleInfoIfTheUserIsAuthenticated() throws Exception {
 		Assert.assertTrue(Context.isAuthenticated());
-		Object ret = controller.get();
+		Object ret = controller.get(hsr);
 		Assert.assertEquals(Context.getLocale(), PropertyUtils.getProperty(ret, "locale"));
 		Assert.assertArrayEquals(Context.getAdministrationService().getAllowedLocales().toArray(),
 		    ((List<Locale>) PropertyUtils.getProperty(ret, "allowedLocales")).toArray());
@@ -98,20 +98,20 @@ public class SessionController1_9Test extends BaseModuleWebContextSensitiveTest 
 	@Test
 	public void get_shouldReturnLocationIfTheUserIsAuthenticated() throws Exception {
 		Assert.assertTrue(Context.isAuthenticated());
-		Object ret = controller.get();
+		Object ret = controller.get(hsr);
 		Object loc = PropertyUtils.getProperty(ret, "sessionLocation");
 		Assert.assertTrue(loc.toString() + " should contain 'display=Unknown Location'",
 		    loc.toString().contains("display=Unknown Location"));
 	}
 
 	/**
-	 * @see SessionController1_9#get()
+	 * @see SessionController1_9#get(HttpServletRequest)
 	 * @verifies return the session with current provider if the user is authenticated
 	 */
 	@Test
 	public void get_shouldReturnCurrentProviderIfTheUserIsAuthenticated() throws Exception {
 		Assert.assertTrue(Context.isAuthenticated());
-		Object ret = controller.get();
+		Object ret = controller.get(hsr);
 		Object currentProvider = PropertyUtils.getProperty(ret, "currentProvider");
 		Assert.assertNotNull(currentProvider);
 		Assert.assertTrue(currentProvider.toString().contains("Super User"));

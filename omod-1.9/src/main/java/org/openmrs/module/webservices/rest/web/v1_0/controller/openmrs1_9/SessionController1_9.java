@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.context.request.WebRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -62,11 +63,12 @@ public class SessionController1_9 extends BaseRestController {
 	 */
 	@RequestMapping(method = RequestMethod.GET)
 	@ResponseBody
-	public Object get() {
+	public Object get(HttpServletRequest request) {
 		boolean authenticated = Context.isAuthenticated();
 		SimpleObject session = new SimpleObject();
 		session.add("authenticated", authenticated);
 		if (authenticated) {
+			session.add("sessionId", request.getSession(true).getId());
 			session.add("user", ConversionUtil.convertToRepresentation(Context.getAuthenticatedUser(),
 			    new CustomRepresentation(USER_CUSTOM_REP)));
 			session.add("locale", Context.getLocale());
@@ -108,7 +110,7 @@ public class SessionController1_9 extends BaseRestController {
 				request.getSession().setAttribute("emrContext.sessionLocationId", location.getId());
 			}
 		}
-		return get();
+		return get(request);
 	}
 
 	/**
