@@ -301,9 +301,13 @@ public class ConversionUtil {
 	public static Object convertMap(Map<String, ?> map, Class<?> toClass) throws ConversionException {
 		// TODO handle refs by fetching the object at their URI
 		Converter converter = getConverter(toClass);
-		
-		Object ret = null;
 		Object uuid = map.get(RestConstants.PROPERTY_UUID);
+
+		if (converter == null) {
+			return uuid;
+		}
+
+		Object ret = null;
 		if (uuid instanceof String) {
 			ret = converter.getByUniqueId(uuid.toString());
 		}
